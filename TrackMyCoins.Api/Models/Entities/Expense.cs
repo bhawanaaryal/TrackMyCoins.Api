@@ -1,9 +1,12 @@
-﻿namespace TrackMyCoins.Api.Models.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace TrackMyCoins.Api.Models.Entities
 {
     public class Expense
     {
         public int Id { get; set; }
         public string Title { get; set; }
+        [Column(TypeName = "decimal(18,2)")] 
         public decimal Amount { get; set; }
         public DateOnly Date { get; set; }
         public int CategoryId { get; set; }
