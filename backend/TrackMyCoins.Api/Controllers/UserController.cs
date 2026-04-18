@@ -50,7 +50,7 @@ namespace TrackMyCoins.Api.Controllers
             _context.SaveChanges();
             return Ok(new { message = "User registered successfully!!" });
         }
-
+        //NO
         [HttpPost("login")]
         public IActionResult Login(LoginDTO dto )
         {
@@ -96,30 +96,26 @@ namespace TrackMyCoins.Api.Controllers
             {
                 token = tokenHandler.WriteToken(token)
             });
+
         }
-        [Authorize]
-        [HttpGet("test")]
-        public IActionResult Test()
-        {
-            return Ok(new { message = "You are authenticated!" });
-        }
+      
         private int GetUserId()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             return int.Parse(userId);
         }
-
+        //No
         [Authorize]
         [HttpGet("admin-dashboard")]
         public IActionResult AdminDashboard()
         {
             var isAdmin = User.Claims.FirstOrDefault(c => c.Type == "IsAdmin")?.Value;
             if (isAdmin != "True")
-                return Forbid(); // 403 if not admin
+                return Forbid(); 
 
             return Ok(new { message = "Welcome, Admin!" });
         }
-
+        //No
         [Authorize]
         [HttpGet("all-users")]
         public IActionResult GetAllUsers()
@@ -132,7 +128,7 @@ namespace TrackMyCoins.Api.Controllers
 
             return Ok(users);
         }
-
+        //NO
         [Authorize]
         [HttpGet("{userId}/details")]
         public IActionResult GetUserDetails(int userId)
@@ -147,7 +143,11 @@ namespace TrackMyCoins.Api.Controllers
                     u.Name,
                     u.Email,
                     Expenses = u.Expenses.Select(e => new { e.Id, e.Title, e.Amount, e.Date, e.CategoryId }),
-                    Budgets = u.Budgets.Select(b => new { b.Id, b.Amount, b.Month })
+                    Budgets = u.Budgets.Select(b => new { b.Id, b.Amount, b.Month }),
+                    Categories = u.Expenses
+                .Select(e => e.Category)
+                .Distinct()
+                .Select(c => new { c.Id, c.Name })
                 })
                 .FirstOrDefault();
 
@@ -155,10 +155,10 @@ namespace TrackMyCoins.Api.Controllers
 
             return Ok(user);
         }
-
+        //Yes
         [Authorize]
         [HttpPut("{userId}")]
-        public IActionResult EditUser(int userId, User updated)
+        public IActionResult EditUser(int userId, UpdateUserDTO updated)
         {
             if (!IsAdmin()) return Forbid();
 
@@ -172,7 +172,7 @@ namespace TrackMyCoins.Api.Controllers
             _context.SaveChanges();
             return Ok(user);
         }
-
+        //Yes
         [Authorize]
         [HttpDelete("{userId}")]
         public IActionResult DeleteUser(int userId)
@@ -186,7 +186,7 @@ namespace TrackMyCoins.Api.Controllers
             _context.SaveChanges();
             return Ok();
         }
-
+        //Yes
         [Authorize]
         [HttpPut("expenses/{expenseId}")]
         public IActionResult EditExpense(int expenseId, Expense updated)
@@ -204,7 +204,7 @@ namespace TrackMyCoins.Api.Controllers
             _context.SaveChanges();
             return Ok(expense);
         }
-
+        //Yes
         [Authorize]
         [HttpDelete("expenses/{expenseId}")]
         public IActionResult DeleteExpense(int expenseId)
@@ -218,7 +218,7 @@ namespace TrackMyCoins.Api.Controllers
             _context.SaveChanges();
             return Ok();
         }
-
+        //Yes
         [Authorize]
         [HttpPut("budgets/{budgetId}")]
         public IActionResult EditBudget(int budgetId, Budget updated)
@@ -234,7 +234,7 @@ namespace TrackMyCoins.Api.Controllers
             _context.SaveChanges();
             return Ok(budget);
         }
-
+        //Yes
         [Authorize]
         [HttpDelete("budgets/{budgetId}")]
         public IActionResult DeleteBudget(int budgetId)
