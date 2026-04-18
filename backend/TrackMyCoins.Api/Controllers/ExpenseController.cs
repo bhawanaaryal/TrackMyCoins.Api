@@ -22,6 +22,7 @@ public class ExpenseController : ControllerBase
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         return int.Parse(userId);
     }
+    
     [HttpPost]
     public IActionResult CreateExpense(CreateExpenseDTO dto)
     {
@@ -42,25 +43,25 @@ public class ExpenseController : ControllerBase
         return Ok(new { message = "Expense added successfully" });
 
     }
-        [HttpGet]
-        public IActionResult GetExpenses()
+    [HttpGet]
+    public IActionResult GetExpenses()
+    {
+        var userId = GetUserId();
+
+    var expenses = _context.Expenses
+        .Where(e => e.UserId == userId)
+        .Select(e => new
         {
-            var userId = GetUserId();
+            e.Id,
+            e.Title,
+            e.Amount,
+            e.Date,
+            CategoryName = e.Category.Name
+        })
+        .ToList();
 
-        var expenses = _context.Expenses
-            .Where(e => e.UserId == userId)
-            .Select(e => new
-            {
-                e.Id,
-                e.Title,
-                e.Amount,
-                e.Date,
-                CategoryName = e.Category.Name
-            })
-            .ToList();
-
-        return Ok(expenses);
-        }
+    return Ok(expenses);
+    }
 
     [HttpDelete("{id}")]
     public IActionResult DeleteExpense(int id)

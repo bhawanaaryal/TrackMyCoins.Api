@@ -50,7 +50,7 @@ namespace TrackMyCoins.Api.Controllers
             _context.SaveChanges();
             return Ok(new { message = "User registered successfully!!" });
         }
-        //NO
+
         [HttpPost("login")]
         public IActionResult Login(LoginDTO dto )
         {
@@ -104,7 +104,7 @@ namespace TrackMyCoins.Api.Controllers
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             return int.Parse(userId);
         }
-        //No
+
         [Authorize]
         [HttpGet("admin-dashboard")]
         public IActionResult AdminDashboard()
@@ -115,7 +115,7 @@ namespace TrackMyCoins.Api.Controllers
 
             return Ok(new { message = "Welcome, Admin!" });
         }
-        //No
+
         [Authorize]
         [HttpGet("all-users")]
         public IActionResult GetAllUsers()
@@ -128,7 +128,7 @@ namespace TrackMyCoins.Api.Controllers
 
             return Ok(users);
         }
-        //NO
+
         [Authorize]
         [HttpGet("{userId}/details")]
         public IActionResult GetUserDetails(int userId)
@@ -155,7 +155,7 @@ namespace TrackMyCoins.Api.Controllers
 
             return Ok(user);
         }
-        //Yes
+
         [Authorize]
         [HttpPut("{userId}")]
         public IActionResult EditUser(int userId, UpdateUserDTO updated)
@@ -172,7 +172,7 @@ namespace TrackMyCoins.Api.Controllers
             _context.SaveChanges();
             return Ok(user);
         }
-        //Yes
+
         [Authorize]
         [HttpDelete("{userId}")]
         public IActionResult DeleteUser(int userId)
@@ -186,7 +186,7 @@ namespace TrackMyCoins.Api.Controllers
             _context.SaveChanges();
             return Ok();
         }
-        //Yes
+
         [Authorize]
         [HttpPut("expenses/{expenseId}")]
         public IActionResult EditExpense(int expenseId, Expense updated)
@@ -204,7 +204,7 @@ namespace TrackMyCoins.Api.Controllers
             _context.SaveChanges();
             return Ok(expense);
         }
-        //Yes
+
         [Authorize]
         [HttpDelete("expenses/{expenseId}")]
         public IActionResult DeleteExpense(int expenseId)
@@ -218,7 +218,7 @@ namespace TrackMyCoins.Api.Controllers
             _context.SaveChanges();
             return Ok();
         }
-        //Yes
+
         [Authorize]
         [HttpPut("budgets/{budgetId}")]
         public IActionResult EditBudget(int budgetId, Budget updated)
@@ -234,7 +234,7 @@ namespace TrackMyCoins.Api.Controllers
             _context.SaveChanges();
             return Ok(budget);
         }
-        //Yes
+
         [Authorize]
         [HttpDelete("budgets/{budgetId}")]
         public IActionResult DeleteBudget(int budgetId)
