@@ -39,7 +39,8 @@ TrackMyCoins
 ├── backend
 │   └── TrackMyCoins.Api
 │
-└── frontend
+├── frontend
+│   └── track-my-coins
 ```
 
 ---
