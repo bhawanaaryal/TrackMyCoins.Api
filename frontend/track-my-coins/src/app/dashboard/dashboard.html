@@ -1,0 +1,38 @@
+<h2>Dashboard</h2>
+
+<div *ngIf="data" class="dashboard-container">
+
+  <div class="cards">
+    <div class="card">
+      <h3>Total Spent</h3>
+      <p>Rs {{ data.totalSpent }}</p>
+    </div>
+    <div class="card">
+      <h3>Budget</h3>
+      <p>Rs {{ data.budget }}</p>
+    </div>
+    <div class="card">
+      <h3>Remaining</h3>
+      <p>Rs {{ data.remaining }}</p>
+    </div>
+  </div>
+
+  <hr>
+
+  <h3>Category Breakdown</h3>
+  <div class="category-bars">
+    <div *ngFor="let c of data.categoryBreakdown" class="bar-container">
+      <span class="label">{{ c.category }} - Rs {{ c.total }}</span>
+      <div class="bar" [style.width.%]="getBarWidth(c.total)"></div>
+    </div>
+  </div>
+
+  <hr>
+
+
+
+</div>
+
+<div *ngIf="isOverBudget" class="alert">
+  ⚠️ Budget exceeded by Rs {{ data.totalSpent - data.budget }}
+</div>

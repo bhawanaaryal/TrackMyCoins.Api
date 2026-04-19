@@ -1,0 +1,48 @@
+<div class="expenses-container">
+  <div class="expenses-form">
+    <h2 class="expenses-title">Add Expense</h2>
+    <form [formGroup]="expenseForm" (ngSubmit)="onSubmit()">
+
+      <label for="title">Title</label>
+      <input id="title" type="text" placeholder="Enter title" formControlName="title">
+
+      <label for="amount">Amount</label>
+      <input id="amount" type="number" placeholder="Enter amount" formControlName="amount">
+
+      <label for="date">Date</label>
+      <input id="date" type="date" formControlName="date">
+
+      <label for="category">Category</label>
+      <div class="category-inline">
+        <select id="category" formControlName="categoryId">
+          <option value="">Select Category</option>
+          <option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</option>
+        </select>
+        <button type="button" class="add-inline-btn" (click)="showNewCategory = !showNewCategory">+ Add</button>
+      </div>
+
+      <div *ngIf="showNewCategory" class="new-category-inline">
+        <input type="text" [(ngModel)]="newCategory" placeholder="New category name">
+        <button type="button" (click)="addCategory()">Add</button>
+      </div>
+
+      <button type="submit" class="submit-btn">Add Expense</button>
+    </form>
+  </div>
+
+  <h2 class="expenses-title">Your Expenses</h2>
+  <div class="month-filter">
+  <label for="monthSelect">Filter by Months:</label>
+ <select id="monthSelect" (change)="onMonthChange($event)">
+  <option value="">All Months</option>
+  <option *ngFor="let m of months" [value]="m.value">{{ m.name }}</option>
+</select>
+</div>
+  <ul>
+    <li *ngFor="let e of filteredExpenses">
+      {{ e.title }} - Rs {{ e.amount }} - {{ e.categoryName }}
+      <button (click)="edit(e)">Edit</button>
+      <button (click)="delete(e.id)">Delete</button>
+    </li>
+  </ul>
+</div>

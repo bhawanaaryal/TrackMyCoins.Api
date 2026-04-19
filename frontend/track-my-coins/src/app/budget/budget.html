@@ -1,0 +1,25 @@
+<div class="budget-container">
+  <form class="budget-form" [formGroup]="budgetForm" (ngSubmit)="onSubmit()">
+    <h2>Set Monthly Budget</h2>
+
+    <label>Amount</label>
+    <input type="number" placeholder="Enter amount" formControlName="amount">
+
+    <label>Month</label>
+    <select formControlName="month">
+      <option value="">Select Month</option>
+      <option *ngFor="let m of months" [value]="m.value">{{ m.name }}</option>
+    </select>
+
+    <label>Year</label>
+    <input type="number" placeholder="Enter year" formControlName="year">
+
+    <button type="submit">Save Budget</button>
+  </form>
+
+  <hr>
+
+  <h3 *ngIf="currentBudget" class="current-budget">
+    Current Budget: Rs {{ currentBudget.amount }}
+  </h3>
+</div>

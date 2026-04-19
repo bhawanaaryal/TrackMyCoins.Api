@@ -1,0 +1,43 @@
+<div class="admin-container">
+  <h2 class="users-title">Users</h2>
+<table border="1">
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Actions</th>
+    </tr>
+    <tr *ngFor="let u of users">
+        <td>{{u.id}}</td>
+        <td>
+            <span *ngIf="selectedUser?.id !== u.id">{{u.name}}</span>
+            <input *ngIf="selectedUser?.id === u.id" [(ngModel)]="selectedUser.name">
+        </td>
+        <td>
+            <span *ngIf="selectedUser?.id !== u.id">{{u.email}}</span>
+            <input *ngIf="selectedUser?.id === u.id" [(ngModel)]="selectedUser.email">
+        </td>
+        <td>
+            <span *ngIf="selectedUser?.id !== u.id">{{u.isAdmin ? 'Admin' : 'User'}}</span>
+            <select *ngIf="selectedUser?.id === u.id" [(ngModel)]="selectedUser.isAdmin">
+                <option [ngValue]="false">User</option>
+                <option [ngValue]="true">Admin</option>
+            </select>
+        </td>
+        <td>
+            <ng-container *ngIf="selectedUser?.id !== u.id">
+                <button (click)="editUser(u)">Edit</button>
+                <button (click)="deleteUser(u.id)">Delete</button>
+                <button (click)="viewDetails(u.id)">Manage Details</button>
+
+            </ng-container>
+            <ng-container *ngIf="selectedUser?.id === u.id">
+                <button (click)="updateUser()">Save</button>
+                <button (click)="selectedUser = null">Cancel</button>
+            </ng-container>
+        </td>
+    </tr>
+</table>
+</div>
+

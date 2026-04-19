@@ -1,0 +1,94 @@
+<div class="details-container" *ngIf="user">
+
+  <button class="back-btn" (click)="goBack()">← Back</button>
+
+  <div class="user-info">
+    <h2>{{ user.name }}</h2>
+    <p>{{ user.email }}</p>
+  </div>
+
+  <div class="tabs">
+    <button [class.active]="activeTab === 'expenses'" (click)="activeTab = 'expenses'">Expenses</button>
+    <button [class.active]="activeTab === 'budgets'" (click)="activeTab = 'budgets'">Budgets</button>
+    <button [class.active]="activeTab === 'categories'" (click)="activeTab = 'categories'">Categories</button>
+  </div>
+
+  <div *ngIf="activeTab === 'expenses'">
+    <table>
+      <tr>
+        <th>Title</th>
+        <th>Amount</th>
+        <th>Date</th>
+        <th>Actions</th>
+      </tr>
+      <tr *ngFor="let e of expenses">
+        <td>
+          <span *ngIf="selectedExpense?.id !== e.id">{{ e.title }}</span>
+          <input *ngIf="selectedExpense?.id === e.id" [(ngModel)]="selectedExpense.title">
+        </td>
+        <td>
+          <span *ngIf="selectedExpense?.id !== e.id">Rs {{ e.amount }}</span>
+          <input *ngIf="selectedExpense?.id === e.id" type="number" [(ngModel)]="selectedExpense.amount">
+        </td>
+        <td>
+          <span *ngIf="selectedExpense?.id !== e.id">{{ e.date | date }}</span>
+          <input *ngIf="selectedExpense?.id === e.id" type="date" [(ngModel)]="selectedExpense.date">
+        </td>
+        <td>
+          <ng-container *ngIf="selectedExpense?.id !== e.id">
+            <button (click)="editExpense(e)">Edit</button>
+            <button (click)="deleteExpense(e.id)">Delete</button>
+          </ng-container>
+          <ng-container *ngIf="selectedExpense?.id === e.id">
+            <button (click)="updateExpense()">Save</button>
+            <button (click)="selectedExpense = null">Cancel</button>
+          </ng-container>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div *ngIf="activeTab === 'budgets'">
+    <table>
+      <tr>
+        <th>Amount</th>
+        <th>Month</th>
+        <th>Actions</th>
+      </tr>
+      <tr *ngFor="let b of budgets">
+        <td>
+          <span *ngIf="selectedBudget?.id !== b.id">Rs {{ b.amount }}</span>
+          <input *ngIf="selectedBudget?.id === b.id" type="number" [(ngModel)]="selectedBudget.amount">
+        </td>
+        <td>
+          <span *ngIf="selectedBudget?.id !== b.id">{{ b.month }}</span>
+          <input *ngIf="selectedBudget?.id === b.id" [(ngModel)]="selectedBudget.month">
+        </td>
+        <td>
+          <ng-container *ngIf="selectedBudget?.id !== b.id">
+            <button (click)="editBudget(b)">Edit</button>
+            <button (click)="deleteBudget(b.id)">Delete</button>
+          </ng-container>
+          <ng-container *ngIf="selectedBudget?.id === b.id">
+            <button (click)="updateBudget()">Save</button>
+            <button (click)="selectedBudget = null">Cancel</button>
+          </ng-container>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div *ngIf="activeTab === 'categories'">
+    <table>
+      <tr>
+        <th>Id</th>
+        <th>Name</th>
+      </tr>
+      <tr *ngFor="let c of categories">
+        <td>{{ c.id }}</td>
+        <td>{{ c.name }}</td>
+      </tr>
+    </table>
+  </div>
+
+</div>

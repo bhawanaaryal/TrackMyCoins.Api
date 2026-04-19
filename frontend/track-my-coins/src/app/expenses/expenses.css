@@ -1,0 +1,188 @@
+.expenses-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+  padding: 40px 20px;
+  background-color: #f0f2f5;
+}
+
+.expenses-form {
+  background-color: #ffffff;
+  padding: 30px 25px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  max-width: 400px;
+  width: 100%;
+  margin-bottom: 40px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.expenses-form:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(0,0,0,0.2);
+}
+
+.expenses-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+label {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  display: block;
+  text-align: left;
+  color: #555;
+}
+
+input, select {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  outline: none;
+  margin-bottom: 12px;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+input:focus, select:focus {
+  border-color: #4caf50;
+  box-shadow: 0 0 8px rgba(76,175,80,0.2);
+}
+
+.category-inline {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.category-inline select {
+  flex: 2;
+}
+
+.add-inline-btn {
+  flex: 1;
+  background-color: #bababa;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 8px 0;
+  transition: background 0.3s ease;
+}
+
+.add-inline-btn:hover {
+  background-color: #888888;
+}
+
+.new-category-inline {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.new-category-inline input {
+  flex: 2;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.new-category-inline button {
+  flex: 1;
+  padding: 8px 0;
+  background-color: #878787;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.new-category-inline button:hover {
+  background-color: #5b5b5b;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 12px 0;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  background-color: #000;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+  background-color: #555;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  max-width: 500px;
+  width: 100%;
+}
+
+li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+  font-size: 14px;
+}
+
+li button {
+  padding: 6px 10px;
+  font-size: 13px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+li button:first-of-type {
+  background-color: #6d6d6d;
+  color: white;
+}
+
+li button:first-of-type:hover {
+  background-color: #979797;
+}
+
+li button:last-of-type {
+  background-color: #414141;
+  color: white;
+}
+
+li button:last-of-type:hover {
+  background-color: #b9b9b9;
+}
+
+.month-filter {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.month-filter select {
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
