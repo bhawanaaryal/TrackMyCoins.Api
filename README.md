@@ -77,7 +77,7 @@ Update the `appsettings.json` file with your database connection string and JWT 
 ### 3. Frontend Setup
 
 ```
-cd frontend
+cd frontend/track-my-coins
 npm install
 ng serve
 ```
