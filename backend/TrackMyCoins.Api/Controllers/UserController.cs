@@ -17,10 +17,12 @@ namespace TrackMyCoins.Api.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IConfiguration _configuration;
-        public UserController(AppDbContext context, IConfiguration configuration)
+        private readonly ILogger _logger;
+        public UserController(AppDbContext context, IConfiguration configuration, ILogger<UserController> logger)
         {
             _context = context;
             _configuration = configuration;
+            _logger = logger;
         }
 
         private bool IsAdmin()
@@ -32,9 +34,11 @@ namespace TrackMyCoins.Api.Controllers
         [HttpPost("register")]
         public IActionResult Register(RegisterDTO dto)
         {
+            _logger.LogInformation("Register attempt for {Email}", dto.Email);
             
             if (_context.Users.Any(u => u.Email == dto.Email))
             {
+                _logger.LogWarning("User already exists: {Email}", dto.Email);
                 return BadRequest(new { message = "User already exists" });
             }
             var user = new User()
@@ -48,15 +52,19 @@ namespace TrackMyCoins.Api.Controllers
 
             _context.Users.Add(user);
             _context.SaveChanges();
+            _logger.LogInformation("User registered successfully: {Email}", dto.Email);
             return Ok(new { message = "User registered successfully!!" });
         }
 
         [HttpPost("login")]
         public IActionResult Login(LoginDTO dto )
         {
+            _logger.LogInformation("Login attempt for {Email}", dto.Email);
+
             var existingUser = _context.Users.FirstOrDefault(u => u.Email == dto.Email);
             if (existingUser == null)
             {
+                _logger.LogWarning("Login failed - user not found: {Email}", dto.Email);
                 return BadRequest("User doesn't exist");
             }
 
@@ -65,6 +73,7 @@ namespace TrackMyCoins.Api.Controllers
             
             if (result == PasswordVerificationResult.Failed)
             {
+                _logger.LogWarning("Login failed - wrong password: {Email}", dto.Email);
                 return BadRequest(new { message = "Incorrect password" });
             }
 
