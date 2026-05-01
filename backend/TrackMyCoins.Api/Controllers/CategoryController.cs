@@ -4,54 +4,36 @@ using TrackMyCoins.Api.Data;
 using System.Security.Claims;
 using TrackMyCoins.Api.Models.DTOs;
 using TrackMyCoins.Api.Models.Entities;
+using TrackMyCoins.Api.Services.Interfaces;
 
 [Route("api/categories")]
 [ApiController]
 [Authorize]
 public class CategoryController : ControllerBase
 {
-    private readonly AppDbContext _context;
+    private readonly ICategoryService _categoryService;
 
-    public CategoryController(AppDbContext context)
+    public CategoryController(ICategoryService categoryService)
     {
-        _context = context;
+        _categoryService = categoryService;
     }
 
-    private int GetUserId()
-    {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        return int.Parse(userId);
-    }
 
     [HttpPost]
-    public IActionResult AddCategory(CreateCategoryDTO dto)
+    public async Task<IActionResult> AddCategory(CreateCategoryDTO dto)
     {
         var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-        var category = new Category
-        {
-            Name = dto.Name,
-            UserId = userId
-        };
-
-        _context.Categories.Add(category);
-        _context.SaveChanges();
+        await _categoryService.AddCategoryAsync(dto, userId);
 
         return Ok(new { message = "Category added!" });
     }
 
     [HttpGet]
-    public IActionResult GetCategories()
+    public async Task<IActionResult> GetCategories()
     {
-        var userId = GetUserId();
+        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-        var categories = _context.Categories
-            .Where(c => c.UserId == null || c.UserId == userId)
-            .Select(c => new {
-                c.Id,
-                c.Name
-            })
-            .ToList();
+        var categories = await _categoryService.GetCategoryAsync(userId);
 
         return Ok(categories);
     }

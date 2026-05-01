@@ -4,17 +4,18 @@ using TrackMyCoins.Api.Data;
 using TrackMyCoins.Api.Models.Entities;
 using TrackMyCoins.Api.Models.DTOs;
 using System.Security.Claims;
+using TrackMyCoins.Api.Services.Interfaces;
 
 [Route("api/expenses")]
 [ApiController]
 [Authorize]
 public class ExpenseController : ControllerBase
 {
-    private readonly AppDbContext _context;
+    private readonly IExpenseService _expenseService;
 
-    public ExpenseController(AppDbContext context)
+    public ExpenseController(IExpenseService expenseService)
     {
-        _context = context;
+        _expenseService = expenseService;
     }
 
     private int GetUserId()
@@ -24,80 +25,45 @@ public class ExpenseController : ControllerBase
     }
     
     [HttpPost]
-    public IActionResult CreateExpense(CreateExpenseDTO dto)
+    public async Task<IActionResult> CreateExpense(CreateExpenseDTO dto)
     {
         var userId = GetUserId();
-
-        var expense = new Expense
-        {
-            Title = dto.Title,
-            Amount = dto.Amount,
-            Date = dto.Date,
-            CategoryId = dto.CategoryId,
-            UserId = userId
-        };
-
-        _context.Expenses.Add(expense);
-        _context.SaveChanges();
-
+        await _expenseService.AddExpenseAsync(dto, userId);
+        
         return Ok(new { message = "Expense added successfully" });
 
     }
     [HttpGet]
-    public IActionResult GetExpenses()
+    public async Task<IActionResult> GetExpenses()
     {
         var userId = GetUserId();
 
-    var expenses = _context.Expenses
-        .Where(e => e.UserId == userId)
-        .Select(e => new
-        {
-            e.Id,
-            e.Title,
-            e.Amount,
-            e.Date,
-            CategoryName = e.Category.Name
-        })
-        .ToList();
-
-    return Ok(expenses);
+        var expense = await _expenseService.GetExpenseAsync(userId);
+        return Ok(expense);
     }
 
     [HttpDelete("{id}")]
-    public IActionResult DeleteExpense(int id)
+    public async Task<IActionResult> DeleteExpense(int id)
     {
         var userId = GetUserId();
 
-        var expense = _context.Expenses
-            .FirstOrDefault(e => e.Id == id && e.UserId == userId);
-
-        if (expense == null)
-            return NotFound();
-
-        _context.Expenses.Remove(expense);
-        _context.SaveChanges();
-
+        var success = await _expenseService.DeleteExpenseAsync(userId, id);
+        if (!success)
+        {
+            return BadRequest();
+        }
         return Ok(new { message = "Deleted successfully" });
     }
 
     [HttpPut("{id}")]
-    public IActionResult UpdateExpense(int id, CreateExpenseDTO dto)
+    public async Task<IActionResult> UpdateExpense(int id, CreateExpenseDTO dto)
     {
         var userId = GetUserId();
-
-        var expense = _context.Expenses
-            .FirstOrDefault(e => e.Id == id && e.UserId == userId);
-
-        if (expense == null)
-            return NotFound();
-
-        expense.Title = dto.Title;
-        expense.Amount = dto.Amount;
-        expense.Date = dto.Date;
-        expense.CategoryId = dto.CategoryId;
-
-        _context.SaveChanges();
-
+        var submit = await _expenseService.UpdateExpenseAsync(userId, id, dto);
+        if (!submit)
+        {
+            return BadRequest();    
+        }
         return Ok(new { message = "Updated successfully" });
     }
 

@@ -4,61 +4,38 @@ using TrackMyCoins.Api.Data;
 using TrackMyCoins.Api.Models.Entities;
 using TrackMyCoins.Api.Models.DTOs;
 using System.Security.Claims;
+using TrackMyCoins.Api.Services.Interfaces;
 
 [Route("api/budgets")]
 [ApiController]
 [Authorize]
 public class BudgetController : ControllerBase
 {
-    private readonly AppDbContext _context;
+    private readonly IBudgetService _budgetService;
 
-    public BudgetController(AppDbContext context)
+    public BudgetController(IBudgetService budgetService)
     {
-        _context = context;
+        _budgetService = budgetService;
     }
 
-    private int GetUserId()
-    {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        return int.Parse(userId);
-    }
+
     [HttpPost]
-    public IActionResult SetBudget(CreateBudgetDTO dto)
+    public async  Task<IActionResult> SetBudget(CreateBudgetDTO dto)
     {
-        var userId = GetUserId();
-
-        var existing = _context.Budgets
-            .FirstOrDefault(b => b.UserId == userId && b.Month == dto.Month && b.Year == dto.Year);
-
-        if (existing != null)
-        {
-            existing.Amount = dto.Amount;
-        }
-        else
-        {
-            var budget = new Budget
-            {
-                UserId = userId,
-                Amount = dto.Amount,
-                Month = dto.Month,
-                Year = dto.Year
-            };
-
-            _context.Budgets.Add(budget);
-        }
-
-        _context.SaveChanges();
-
+        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+        await _budgetService.AddBudgetAsync(userId, dto);
         return Ok(new { message = "Budget saved" });
     }
 
     [HttpGet]
-    public IActionResult GetBudget(int month, int year)
+    public async Task<IActionResult> GetBudgetAsync(int month, int year)
     {
-        var userId = GetUserId();
-
-        var budget = _context.Budgets
-            .FirstOrDefault(b => b.UserId == userId && b.Month == month && b.Year == year);
+        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+        var budget = await _budgetService.GetBudgetAsync(userId, month, year);
+        if (budget == null)
+        {
+            return NotFound();
+        }
 
         return Ok(budget);
     }

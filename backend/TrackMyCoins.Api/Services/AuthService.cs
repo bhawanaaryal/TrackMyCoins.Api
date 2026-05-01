@@ -42,7 +42,8 @@ namespace TrackMyCoins.Api.Services
             {
                 new Claim(ClaimTypes.NameIdentifier, existingUser.Id.ToString()),
                 new Claim(ClaimTypes.Email, existingUser.Email),
-                new Claim("IsAdmin", existingUser.IsAdmin.ToString())
+                new Claim(ClaimTypes.Role, existingUser.IsAdmin ? "Admin" : "User")
+
             };
 
             var tokenDescriptor = new SecurityTokenDescriptor
