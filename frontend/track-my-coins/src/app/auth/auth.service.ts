@@ -11,7 +11,7 @@ import { LoginModel } from '../shared/models/login.model';
 
 export class AuthService {
 
-  private baseURL = 'http://localhost:5145/api/users';
+  private baseURL = 'http://localhost:5145/api/auth';
   constructor(private http: HttpClient) {}
 
   register(user: RegisterModel): Observable<any> {

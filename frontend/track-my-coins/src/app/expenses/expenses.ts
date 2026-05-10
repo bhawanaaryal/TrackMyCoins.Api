@@ -41,10 +41,10 @@ export class ExpensesComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private expenseService: ExpenseService, private categoryService: CategoryService) {
     this.expenseForm = this.fb.group({
-      title: ['', Validators.required],
-      amount: ['', Validators.required],
+      title: ['', [Validators.required, Validators.maxLength(50)]],
+      amount: ['', [Validators.required, Validators.min(0.01), Validators.max(9999999999999999.99)]],
       date: ['', Validators.required],
-      categoryId: ['', Validators.required]
+      categoryId: ['', [Validators.required, Validators.min(1)]]
     });
   }
 
@@ -143,7 +143,10 @@ export class ExpensesComponent implements OnInit {
   newCategory: string = '';
 
   addCategory() {
-    if (!this.newCategory) return;
+    if (!this.newCategory || this.newCategory.length > 50) {
+      alert('The category name should be between 1 and 50 characters');
+      return;
+    }
 
     this.categoryService.addCategory({ name: this.newCategory })
       .subscribe(() => {

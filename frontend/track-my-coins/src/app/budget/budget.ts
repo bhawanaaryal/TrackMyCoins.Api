@@ -35,9 +35,9 @@ export class BudgetComponent implements OnInit {
     const today = new Date();
 
     this.budgetForm = this.fb.group({
-      amount: ['', Validators.required],
-      month: [today.getMonth() + 1],
-      year: [today.getFullYear()]
+      amount: ['', [Validators.required, Validators.min(0.01), Validators.max(9999999999999999.99)]],
+      month: [today.getMonth() + 1, [Validators.min(1), Validators.max(12)]],
+      year: [today.getFullYear(), [Validators.min(2000), Validators.max(2100)]]
     });
   }
 
